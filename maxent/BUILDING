@@ -1,0 +1,3 @@
+Modify LIBLBFGS and CXX in Makefile to fit your environment. To build
+liblbfgs, take a look at tools/BUILDING. Note, you *must* use g++ >=
+4.4 to build maxent* and latent*.

@@ -1,0 +1,14 @@
+*.pyc
+data
+split
+train*
+dev*
+test*
+map*
+LOCALINFO
+outputs
+experimental
+pickles
+
+Makefile
+megam_0.92

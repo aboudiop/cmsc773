@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>README</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2011-05-04 00:37:14 EDT"/>
+<meta name="author" content="Wu"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+
+<h1 class="title">README</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Dependencies </a></li>
+<li><a href="#sec-2">2 Directory structure </a></li>
+<li><a href="#sec-3">3 Building necessary tools </a></li>
+<li><a href="#sec-4">4 Setting up PYTHONPATH </a></li>
+<li><a href="#sec-5">5 Getting cleaned up data </a></li>
+<li><a href="#sec-6">6 Generating features </a>
+<ul>
+<li>
+<ul>
+<li><a href="#sec-6.1">6.1 Baseline </a></li>
+<li><a href="#sec-6.2">6.2 n-gram </a></li>
+<li><a href="#sec-6.3">6.3 Collocation </a></li>
+<li><a href="#sec-6.4">6.4 Task-specific features </a></li>
+<li><a href="#sec-6.5">6.5 Merging features </a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-7">7 Tuning the classifier and testing </a></li>
+<li><a href="#sec-8">8 Feature extraction using LSA and PCA </a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Dependencies </h2>
+<div class="outline-text-2" id="text-1">
+
+<p>We need the following tools to run or build our code:
+</p><ul>
+<li>
+Python (&gt;= 2.6 and &lt; 3.0) : for most scripts
+</li>
+<li>
+NLTK (any recent version) : for preprocessing
+</li>
+<li>
+GNU toolchain (any recent version; including gcc, autoconf, make,
+etc) : for building liblbfgs
+</li>
+<li>
+OCaml (any recent version) : for building megam
+</li>
+<li>
+g++ (&gt;= 4.4) : for building our own maxent and latent model
+implementations
+</li>
+<li>
+Standard UNIX utils such as <code>grep, sort, uniq, cat, sh</code>
+</li>
+<li>
+A program called <code>seq</code>, which is part of GNU coreutils (note for
+some reason there is not a corresponding counter part in BSD
+coreutils and it is thus not available by default on Mac OS X)
+</li>
+<li>
+Matlab (any recent version) : feature extraction
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Directory structure </h2>
+<div class="outline-text-2" id="text-2">
+
+<ul>
+<li>
+<code>common.py</code> : common utilities (possibly) useful to everyone
+</li>
+<li>
+<code>feateng/</code> : feature engineering stuff
+</li>
+<li>
+<code>preprocess/</code> : preprocessing stuff (cleaning the data; etc.)
+</li>
+<li>
+<code>coarsefine/</code> : scripts for coarser grouping classification
+</li>
+<li>
+<code>maxent/</code> : our implementaion of MaxEnt and the latent model using
+liblbfgs
+</li>
+<li>
+<code>tools/</code> : source code and executables of off-the-shelf tools
+</li>
+<li>
+<code>scripts/</code> : scripts for running the whole training and testing
+procedure
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Building necessary tools </h2>
+<div class="outline-text-2" id="text-3">
+
+<p>See instructions in <code>tools/BUILDING</code> and <code>maxent/BUILDING</code>.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Setting up PYTHONPATH </h2>
+<div class="outline-text-2" id="text-4">
+
+<p>Add the project directory to your <code>PYTHONPATH</code> so that every script
+knows which <code>common.py</code> to import. If you are using bash, do this
+(suppose <code>$PROJ_PATH</code> is the project directory)
+</p>
+
+
+
+<pre class="example">export PYTHONPATH=$PROJ_PATH:$PYTHONPATH
+</pre>
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Getting cleaned up data </h2>
+<div class="outline-text-2" id="text-5">
+
+<ol>
+<li>
+Assuming <code>$ORIG</code> is the original csv data, run this at the top
+level of the project directory to get clean and split data:
+
+
+</li>
+</ol>
+
+
+<pre class="example">sh clean.sh $ORIG split
+</pre>
+
+
+
+
+<ol>
+<li>
+Now you should have a <code>split</code> directory with a couple of
+number-named files. Run this (still at top level) to get randomly
+merged training/dev/test data:
+
+
+</li>
+</ol>
+
+
+<pre class="example">preprocess/tr_de_te.py 3 1 1 . split/*
+</pre>
+
+
+
+
+<p>
+You will see three files called <code>train, dev, test</code> in your current
+working directory.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Generating features </h2>
+<div class="outline-text-2" id="text-6">
+
+<p>Use scripts under <code>feateng</code> to generate features.
+</p>
+
+</div>
+
+<div id="outline-container-6.1" class="outline-4">
+<h4 id="sec-6.1"><span class="section-number-4">6.1</span> Baseline </h4>
+<div class="outline-text-4" id="text-6.1">
+
+<p>First notice baseline features are not used with any other features
+later on. Use <code>feateng/baseline.py</code> to generate baseline features. If
+you run this without any arguments, you will see the usage:
+</p>
+
+
+<pre class="example">$ feateng/baseline.py
+Usage: feateng/baseline.py which(=megam|crfsuite) out_dir train dev test [window_back=1 window_forward=1]
+</pre>
+
+
+
+
+<p>
+Since we will only use MegaM in the following, run the following to
+obtain baseline features:
+</p>
+
+
+<pre class="example">feateng/baseline.py megam $OUTDIR $TRAIN_PATH $DEV_PATH $TEST_PATH
+</pre>
+
+
+
+
+<p>
+Where <code>$OUTDIR</code> is the output directory (make sure it exists),
+<code>$TRAIN_PATH</code>, <code>$DEV_PATH</code> and <code>$TEST_PATH</code> are paths of corresponding
+data files obtained by running <code>preprocess/tr_de_te.py</code>.
+</p>
+<p>
+Under <code>$OUTDIR</code>, you should see four files, namely <code>train.megam dev.megam test.megam map.megam</code>.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6.2" class="outline-4">
+<h4 id="sec-6.2"><span class="section-number-4">6.2</span> n-gram </h4>
+<div class="outline-text-4" id="text-6.2">
+
+<p>Similar to baseline features, run without arguments for usage:
+</p>
+
+
+<pre class="example">$ feateng/ngrams.py
+Usage: feateng/ngrams.py which(=megam|crfsuite) out_dir train dev test window_back window_forward ngram_window stem
+</pre>
+
+
+
+
+<p>
+Usually, we use the following arguments
+</p>
+
+
+<pre class="example">feateng/ngrams.py megam $OUTDIR $TRAIN_PATH $DEV_PATH $TEST_PATH 0 0 1 1
+</pre>
+
+
+
+
+<p>
+Under <code>$OUTDIR</code>, you should see four files, namely <code>train.megam dev.megam test.megam map.megam</code>.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6.3" class="outline-4">
+<h4 id="sec-6.3"><span class="section-number-4">6.3</span> Collocation </h4>
+<div class="outline-text-4" id="text-6.3">
+
+<p>First of all, we need to extract collocations. To do this, first run
+the following to get the input for MDL collocation extraction
+</p>
+
+
+<pre class="example">cut -f5 $TRAIN_PATH | preprocess/remove_triple.py &gt; $TRAIN_FOR_MDL
+</pre>
+
+
+
+
+<p>
+Then run <code>mdlinduct.py</code> to induct collocations
+</p>
+
+
+<pre class="example">mdl/mdlinduct.py $TRAIN_FOR_MDL $TRAIN_FOR_MDL
+</pre>
+
+
+
+
+<p>
+Now run the following to get a list of collocations longer than 2
+words
+</p>
+
+
+<pre class="example">grep -E '_.*_' $TRAIN_FOR_MDL-words | sort | uniq &gt; $COLLOC_LIST
+</pre>
+
+
+
+
+<p>
+Using <code>$COLLOC_LIST</code>, we can now do the actual feature generation with
+<code>feateng/colloc.py</code>, here's the usage:
+</p>
+
+
+<pre class="example">$ feateng/colloc.py
+Usage: feateng/colloc.py which(=megam|crfsuite) out_dir train dev test colloc
+</pre>
+
+
+
+
+<p>
+Run the following to get collocation features
+</p>
+
+
+<pre class="example">feateng/colloc.py megam $OUTDIR $TRAIN_PATH $DEV_PATH $TEST_PATH $COLLOC_LIST
+</pre>
+
+
+
+
+<p>
+Under <code>$OUTDIR</code>, you should see four files, namely <code>train.megam dev.megam test.megam map.megam</code>. It's fine that some lines contains
+only a integer label since in this part we are only extracting a small
+number of features.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6.4" class="outline-4">
+<h4 id="sec-6.4"><span class="section-number-4">6.4</span> Task-specific features </h4>
+<div class="outline-text-4" id="text-6.4">
+
+<p>We extract all kinds of task-specific features using
+<code>feateng/FeatureEng.py</code>. Here the usage:
+</p>
+
+
+<pre class="example">feateng/FeatureEng.py which(=megam|matlab) $INDIR $OUTDIR $TRAIN_NAME $DEV_NAME $TEST_NAME
+</pre>
+
+
+
+
+<p>
+Usually we use <code>megam</code> for <code>which</code>. Under <code>$OUTDIR</code>, you should see
+four files, namely <code>train.megam dev.megam test.megam map.megam</code>.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6.5" class="outline-4">
+<h4 id="sec-6.5"><span class="section-number-4">6.5</span> Merging features </h4>
+<div class="outline-text-4" id="text-6.5">
+
+<p>Once you have separte feature files from different feature generation
+routines, the next thing is to merge them into a single data set. Use
+<code>feateng/merge_feat_megam.py</code> for this. For example, the following
+command line merges n-gram, collocation and some other mysterious
+features of the training data to another output file called
+<code>merged/train.megam</code>
+</p>
+
+
+<pre class="example">feateng/merge_feat_megam.py merged/train.megam $TRAIN_COLLOC $TRAIN_NGRAMS $TRAIN_MYSTERY
+</pre>
+
+
+
+
+<p>
+Do the same thing for test and dev data.
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Tuning the classifier and testing </h2>
+<div class="outline-text-2" id="text-7">
+
+<p>Once you have the features ready, use one of the scripts under
+<code>scripts/</code> to try it out! For MaxEnt, you could either use megam or
+our implementation. For the latent model, our implementation is your
+only choice.
+</p>
+<p>
+All scripts need valid path variables for scripts, therefore, before
+running any of them, make sure to modify <code>$PROJ_PATH</code> to be your
+actual path of the project directory.
+</p>
+<p>
+There are four scripts under <code>scripts/</code>, namely, <code>run_megam.sh</code>,
+<code>run_maxent.sh</code>, <code>run_megam_merge.sh</code>, <code>run_latent.sh</code>. All of them
+require input training/dev/test data be renamed as <code>train.megam</code>,
+<code>dev.megam</code>, and <code>test.megam</code> respectively. Also, it needs a file
+called <code>map.megam</code> for converting back and forth between textual and
+integral label names (some scripts under <code>feateng/</code> might not generate
+the last file; you can just use the one generated by another script on
+the same data set, for example, <code>feateng/ngrams.py</code>). Here's brief
+description of what the scripts do:
+</p>
+<ul>
+<li>
+<code>run_{megam,maxent}.sh</code> : These two do the same thing &mdash; training
+and testing using MaxEnt, except that training is done with
+different implementations of MaxEnt. To use one of these, go to the
+directory containing train/dev/test/map data named as <code>train.megam</code>,
+<code>dev.megam</code>, <code>test.megam</code> and <code>map.megam</code> respectively.
+</li>
+<li>
+<code>run_megam_merge.sh</code> : This runs the coarser grouping model. To use
+one of these, go to the directory containing train/dev/test/map data
+named as <code>train.megam</code>, <code>dev.megam</code>, <code>test.megam</code> and <code>map.megam</code>
+respectively. You also need a file named <code>megam.groups</code> containing
+the grouping information. There is one that corresponds to the
+grouping scheme in the coding manual in <code>scripts/megam.groups</code>.
+</li>
+<li>
+<code>run_latent.sh</code> : This runs the latent model. To use one
+of these, go to the directory containing train/dev/test/map data
+named as <code>train.megam</code>, <code>dev.megam</code>, <code>test.megam</code> and <code>map.megam</code>
+respectively.
+
+</li>
+</ul>
+
+<p>After running one of them, it produces several output files:
+</p><ul>
+<li>
+<code>megam.run.out</code> : the raw prediction file, where each line
+corresponds to a line in the test data and numbers are labels sorted
+in k-best order
+</li>
+<li>
+<code>megam.run.kbest</code> : k-best accuracy on the test data
+
+</li>
+</ul>
+
+<p>Sometimes, we also produce other output for diagnostic purposes, for
+example:
+</p><ul>
+<li>
+<code>test.labels</code> : textual labels (codes in our case) of test data; we
+do this because megam requires labels be encoded in integers and
+sometimes it is desirable to see its textual counterpart
+</li>
+<li>
+<code>megam.run.eval</code> : label-wise 1-best accuracy
+</li>
+<li>
+<code>megam.run.csv</code> : confusion matrix over labels in CSV format
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> Feature extraction using LSA and PCA </h2>
+<div class="outline-text-2" id="text-8">
+
+<p>We use Matlab for this part. Before running, make sure the data format
+is correct (i.e. generated using which=matlab; currently only work
+with task-specific features).
+</p>
+<ul>
+<li>
+<code>libsvm_read.m</code> : reads libsvm formatted files and returns a sparse
+data matrix and class label vector.
+</li>
+<li>
+<code>lsa.m</code> : performs LSA and writes train/dev/test features in megam
+format
+</li>
+<li>
+<code>pca.m</code> : performs PCA and writes train/dev/test features in megam
+format
+
+</li>
+</ul>
+
+<p>Training and testing are the same as ordinary features.
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
